@@ -1,9 +1,12 @@
 import express, {Express, Request, Response} from "express";
-import {BrowserPupputeer} from "./services/BrowserPuppeteer";
+import {Crawler} from "./services/Crawler";
 import {getAlternativesDate} from "./utils";
+import dotenv from "dotenv";
 
 const app: Express = express();
-const port = 3333;
+dotenv.config();
+
+const port = process.env.PORT || 3333;
 
 app.use(express.json());
 
@@ -13,7 +16,7 @@ app.get("/", async (req: Request, res: Response) => {
 	const alternativesDate: string[][] = getAlternativesDate(String(initialDate), String(finalDate));
 	let finalResult = [];
 
-	const puppeteer = new BrowserPupputeer();
+	const puppeteer = new Crawler();
 
 	await puppeteer.init();
 
@@ -29,4 +32,4 @@ app.get("/", async (req: Request, res: Response) => {
 	await puppeteer.close();
 });
 
-app.listen(port, () => console.log("Server is running"));
+app.listen(port, () => console.log(`Server is running on port ${port}`));

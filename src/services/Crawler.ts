@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 import {transformData} from "../transformData.js";
 
-export class BrowserPupputeer {
+export class Crawler {
 	browser: any;
 	page: any;
 	url: any;
