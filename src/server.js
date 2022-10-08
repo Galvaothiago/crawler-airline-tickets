@@ -1,23 +1,11 @@
 import express from "express";
-import puppeteer from "puppeteer";
-import {transformData} from "./transformData.js";
-import {getAlternativesDate} from "./utils.js";
 import {BrowserPupputeer} from "./services/BrowserPuppeteer.js";
+import {getAlternativesDate} from "./utils.js";
 
 const app = express();
 const port = 3333;
 
 app.use(express.json());
-
-app.get("/teste", (req, res) => {
-	const {initialDate, finalDate} = req.query;
-
-	const result = getAlternativesDate(initialDate, finalDate);
-
-	console.log(result);
-
-	res.json(result);
-});
 
 app.get("/", async (req, res) => {
 	const {initialDate, finalDate} = req.query;
@@ -37,9 +25,8 @@ app.get("/", async (req, res) => {
 		finalResult.push(data);
 	}
 
-	await puppeteer.close();
-
 	res.json(finalResult);
+	await puppeteer.close();
 });
 
 app.listen(port, () => console.log("Server is running"));
