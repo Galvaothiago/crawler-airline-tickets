@@ -1,6 +1,6 @@
-let flightDates = [];
-let departure = [];
-let arrival = [];
+let flightDates: string[] = [];
+let departure: string[] = [];
+let arrival: string[] = [];
 let prices = new Set();
 
 let lastOption = "";
@@ -12,7 +12,7 @@ const cleanVariables = () => {
 	prices = new Set();
 };
 
-const createFlightObj = data => {
+const createFlightObj = (data: string[]) => {
 	let result = [];
 
 	for (let i = 0; i < data.length / 7; i++) {
@@ -29,7 +29,7 @@ const createFlightObj = data => {
 	return result;
 };
 
-const addValueIntoArr = item => {
+const addValueIntoArr = (item: string) => {
 	if (item.includes("Ida -") || item.includes("Volta -")) lastOption = item;
 
 	if (item.includes("R$")) {
@@ -46,7 +46,7 @@ const addValueIntoArr = item => {
 	}
 };
 
-export const transformData = obj => {
+export const transformData = (obj: string[]) => {
 	const hasData = obj.length > 0;
 
 	if (!hasData) return;

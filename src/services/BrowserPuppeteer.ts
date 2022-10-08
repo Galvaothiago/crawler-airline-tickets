@@ -2,13 +2,17 @@ import puppeteer from "puppeteer";
 import {transformData} from "../transformData.js";
 
 export class BrowserPupputeer {
+	browser: any;
+	page: any;
+	url: any;
+
 	constructor() {
 		this.browser = null;
 		this.page = null;
 		this.url = "";
 	}
 
-	addParamURL(departure, arrival, initialDate, finalDate) {
+	addParamsURL(departure: string, arrival: string, initialDate: string, finalDate: string) {
 		this.url = `https://www.maxmilhas.com.br/busca-passagens-aereas/RT/${departure}/${arrival}/${initialDate}/${finalDate}/1/0/0/EC`;
 	}
 
@@ -24,11 +28,11 @@ export class BrowserPupputeer {
 		});
 	}
 
-	async awaitForXpath(xpath) {
+	async awaitForXpath(xpath: string) {
 		await this.page.waitForXPath(xpath);
 	}
 
-	async navigateTo(url) {
+	async navigateTo(url: string) {
 		await this.page.goto(url, {
 			waitUntil: "networkidle2",
 		});
@@ -38,9 +42,9 @@ export class BrowserPupputeer {
 		await this.browser.close();
 	}
 
-	async searchFlight(departure, arrival, initialDate, finalDate) {
+	async searchFlight(departure: string, arrival: string, initialDate: string, finalDate: string) {
 		try {
-			this.addParamURL(departure, arrival, initialDate, finalDate);
+			this.addParamsURL(departure, arrival, initialDate, finalDate);
 
 			await this.navigateTo(this.url);
 			await this.awaitForXpath('//*[@id="__next"]/div[3]/section/div[4]/div[2]/div[1]/div/div[1]');
@@ -49,13 +53,14 @@ export class BrowserPupputeer {
 				let result = [];
 				let scrollValue = 0;
 
-				const quantityAirTickets = document.querySelector(".css-7zc1qr")?.innerText.split(" ")[0];
+				const elementQuantiAirTickets: HTMLElement | null = document.querySelector(".css-7zc1qr");
+				const airlineTicketsFound = Number(elementQuantiAirTickets?.innerText.split(" ")[0]);
 
-				function scrollPage(value) {
+				function scrollPage(value: number) {
 					window.scrollTo(0, value);
 				}
 
-				function delay(time) {
+				function delay(time: number) {
 					return new Promise(function (resolve) {
 						setTimeout(resolve, time);
 					});
@@ -64,7 +69,7 @@ export class BrowserPupputeer {
 				await delay(4000);
 
 				for (let i = 0; i < 100; i++) {
-					let container = document.querySelector(`[data-index="${i}"]`);
+					let container: HTMLElement | null = document.querySelector(`[data-index="${i}"]`);
 
 					if (container) {
 						result.push(container.innerText);
@@ -83,13 +88,13 @@ export class BrowserPupputeer {
 						}
 					}
 
-					if (result.length === Number(quantityAirTickets) || scrollValue > 10000) {
+					if (result.length === Number(airlineTicketsFound) || scrollValue > 10000) {
 						return result;
 					}
 				}
 			});
 
-			const formatContent = content => {
+			const formatContent = (content: string) => {
 				const arr = content?.split("Detalhes").join("").split("\n");
 
 				return arr;
@@ -99,17 +104,15 @@ export class BrowserPupputeer {
 				return [];
 			}
 
-			const result1 = data.map(item => {
+			const result = data.map((item: string) => {
 				const content = formatContent(item);
 
 				return transformData(content);
 			});
 
-			// await this.close();
-
-			return result1;
+			return result;
 		} catch (err) {
-			console.error(err);
+			console.log(err);
 		}
 	}
 }

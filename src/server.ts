@@ -1,16 +1,16 @@
-import express from "express";
-import {BrowserPupputeer} from "./services/BrowserPuppeteer.js";
-import {getAlternativesDate} from "./utils.js";
+import express, {Express, Request, Response} from "express";
+import {BrowserPupputeer} from "./services/BrowserPuppeteer";
+import {getAlternativesDate} from "./utils";
 
-const app = express();
+const app: Express = express();
 const port = 3333;
 
 app.use(express.json());
 
-app.get("/", async (req, res) => {
+app.get("/", async (req: Request, res: Response) => {
 	const {initialDate, finalDate} = req.query;
 
-	const alternativesDate = getAlternativesDate(initialDate, finalDate);
+	const alternativesDate: string[][] = getAlternativesDate(String(initialDate), String(finalDate));
 	let finalResult = [];
 
 	const puppeteer = new BrowserPupputeer();
