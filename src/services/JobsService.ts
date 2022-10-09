@@ -1,6 +1,6 @@
 import {checkValidDates} from "../../src/utils";
 import AppDataSource from "../../src/database";
-import {CreateJobDto} from "../../src/entities/dto/createJobDto";
+import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {Job} from "../../src/entities/Jobs";
 
 export class JobService {

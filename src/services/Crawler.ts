@@ -2,9 +2,9 @@ import puppeteer from "puppeteer";
 import {transformData} from "../transformData.js";
 
 export class Crawler {
-	browser: any;
-	page: any;
-	url: any;
+	private browser: any;
+	private page: any;
+	private url: any;
 
 	constructor() {
 		this.browser = null;
@@ -18,7 +18,7 @@ export class Crawler {
 
 	async init() {
 		this.browser = await puppeteer.launch({
-			headless: false,
+			headless: true,
 		});
 		this.page = await this.browser.newPage();
 

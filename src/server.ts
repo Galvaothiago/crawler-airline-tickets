@@ -3,8 +3,9 @@ import {Crawler} from "./services/Crawler";
 import {getAlternativesDate} from "./utils";
 import dotenv from "dotenv";
 import AppDataSource from "./database";
-import {CreateJobDto} from "./entities/dto/createJobDto";
-import {JobService} from "./services/JobsService";
+import {CreateJobDto} from "./entities/dto/CreateJobDto";
+import {AirlineTicketsService} from "./services/AirlineTicketsService";
+import {CreateAirlineTicketsDto} from "./entities/dto/CreateAirlineTicketsDto";
 
 const app: Express = express();
 dotenv.config();
@@ -14,11 +15,11 @@ const port = process.env.PORT || 3333;
 app.use(express.json());
 
 app.get("/teste", async (req: Request, res: Response) => {
-	const job: CreateJobDto = req.body;
+	// const job: CreateAirlineTicketsDto = req.body;
 
-	const jobService = new JobService();
+	const service = new AirlineTicketsService();
 
-	const jobs = await jobService.getAllJobs();
+	const jobs = await service.findAll();
 
 	return res.json(jobs);
 });
