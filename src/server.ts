@@ -2,6 +2,7 @@ import express, {Express, Request, Response} from "express";
 import {Crawler} from "./services/Crawler";
 import {getAlternativesDate} from "./utils";
 import dotenv from "dotenv";
+import {AppDataSource} from "./database";
 
 const app: Express = express();
 dotenv.config();
@@ -32,4 +33,9 @@ app.get("/", async (req: Request, res: Response) => {
 	await puppeteer.close();
 });
 
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+app.listen(port, () => {
+	AppDataSource.initialize()
+		.then(() => console.log("Data Source has been initialized!"))
+		.catch(err => console.error("Error during Data Source initialization", err));
+	console.log(`Server is running on port ${port}`);
+});
