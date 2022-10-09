@@ -2,7 +2,9 @@ import express, {Express, Request, Response} from "express";
 import {Crawler} from "./services/Crawler";
 import {getAlternativesDate} from "./utils";
 import dotenv from "dotenv";
-import {AppDataSource} from "./database";
+import AppDataSource from "./database";
+import {CreateJobDto} from "./entities/dto/createJobDto";
+import {JobService} from "./services/JobsService";
 
 const app: Express = express();
 dotenv.config();
@@ -10,6 +12,16 @@ dotenv.config();
 const port = process.env.PORT || 3333;
 
 app.use(express.json());
+
+app.get("/teste", async (req: Request, res: Response) => {
+	const job: CreateJobDto = req.body;
+
+	const jobService = new JobService();
+
+	const jobs = await jobService.getAllJobs();
+
+	return res.json(jobs);
+});
 
 app.get("/", async (req: Request, res: Response) => {
 	const {initialDate, finalDate} = req.query;
@@ -34,8 +46,6 @@ app.get("/", async (req: Request, res: Response) => {
 });
 
 app.listen(port, () => {
-	AppDataSource.initialize()
-		.then(() => console.log("Data Source has been initialized!"))
-		.catch(err => console.error("Error during Data Source initialization", err));
+	AppDataSource.initialize();
 	console.log(`Server is running on port ${port}`);
 });

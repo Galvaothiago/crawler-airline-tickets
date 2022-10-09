@@ -36,3 +36,18 @@ export const getAlternativesDate = (initialDate: string, finalDate: string): str
 
 	return convertToArr;
 };
+
+export const checkValidDates = (initialDate: string, finalDate: string): boolean => {
+	const currentDate = new Date();
+	const maxDatePermited = new Date(new Date().setFullYear(new Date().getFullYear() + 4));
+
+	const initialDateObj = new Date(initialDate).getTime();
+	const finalDateObj = new Date(finalDate).getTime();
+
+	console.log({currentDate, maxDatePermited, initialDateObj, finalDateObj});
+	if (initialDateObj > currentDate.getTime() && finalDateObj < maxDatePermited.getTime()) {
+		return true;
+	}
+
+	return false;
+};

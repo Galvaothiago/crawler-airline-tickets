@@ -17,9 +17,6 @@ export class Job {
 	@Column({name: "departure_date"})
 	departureDate: string;
 
-	@Column({name: "return_date"})
-	returnDate: string;
-
 	@Column({name: "arrival_date"})
 	arrivalDate: string;
 
