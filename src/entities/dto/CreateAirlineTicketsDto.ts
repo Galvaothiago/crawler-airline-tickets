@@ -1,13 +1,12 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import {ArrivalFlights} from "../ArrivalFlights";
-import {DepartureFlights} from "../DepartureFlights";
+import {ArrivalFlight} from "../ArrivalFlight";
+import {DepartureFlight} from "../DepartureFlight";
 
 export class CreateAirlineTicketsDto {
 	departureDate: string;
 	arrivalDate: string;
 	company: string;
-	departureFlights!: DepartureFlights[];
-	arrivalFlights!: ArrivalFlights[];
+	departureFlights: DepartureFlight[];
+	arrivalFlights: ArrivalFlight[];
 	priceTax: string;
 	priceWithoutTax: string;
 	priceTotal: string;

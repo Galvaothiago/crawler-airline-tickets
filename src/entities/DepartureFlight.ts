@@ -1,8 +1,7 @@
-import {Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn} from "typeorm";
-import {AirlineTicket} from "./AirlineTickets";
+import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity("departure_flights")
-export class DepartureFlights {
+export class DepartureFlight {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
@@ -16,8 +15,8 @@ export class DepartureFlights {
 	connection: string;
 
 	@Column({name: "time_departure"})
-	time_departure: string;
+	timeDeparture: string;
 
 	@Column({name: "time_arrival"})
-	time_arrival: string;
+	timeArrival: string;
 }
