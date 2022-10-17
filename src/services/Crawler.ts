@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
-import {transformData} from "../transformData.js";
+import {Cluster} from "puppeteer-cluster";
+
+import {AirlineTicketProps, transformData} from "../transformData.js";
 
 export class Crawler {
 	private browser: any;
@@ -19,6 +21,10 @@ export class Crawler {
 	async init() {
 		this.browser = await puppeteer.launch({
 			headless: true,
+			args: [
+				"--no-sandbox",
+				"--disable-dev-shm-usage", // <-- add this one
+			],
 		});
 		this.page = await this.browser.newPage();
 
@@ -40,6 +46,11 @@ export class Crawler {
 
 	async close() {
 		await this.browser.close();
+		await this.page.close();
+
+		this.browser = null;
+		this.page = null;
+		this.url = "";
 	}
 
 	async searchFlight(departure: string, arrival: string, initialDate: string, finalDate: string) {
@@ -66,9 +77,13 @@ export class Crawler {
 					});
 				}
 
-				await delay(4000);
+				await delay(5000);
 
 				for (let i = 0; i < 100; i++) {
+					if (result.length >= Number(airlineTicketsFound) || scrollValue > 10000) {
+						return result;
+					}
+
 					let container: HTMLElement | null = document.querySelector(`[data-index="${i}"]`);
 
 					if (container) {
@@ -76,7 +91,7 @@ export class Crawler {
 						container = null;
 						await delay(300);
 					} else {
-						scrollPage((scrollValue += 500));
+						scrollPage((scrollValue += 700));
 						await delay(600);
 
 						container = document.querySelector(`[data-index="${i}"]`);
@@ -86,10 +101,6 @@ export class Crawler {
 							container = null;
 							await delay(300);
 						}
-					}
-
-					if (result.length === Number(airlineTicketsFound) || scrollValue > 10000) {
-						return result;
 					}
 				}
 			});
@@ -104,7 +115,7 @@ export class Crawler {
 				return [];
 			}
 
-			const result = data.map((item: string) => {
+			const result: AirlineTicketProps[] = data.map((item: string) => {
 				const content = formatContent(item);
 
 				return transformData(content);

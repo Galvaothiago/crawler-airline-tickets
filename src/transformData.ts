@@ -5,6 +5,26 @@ let prices = new Set();
 
 let lastOption = "";
 
+export interface FlightProps {
+	company: string;
+	airport: string;
+	timeDeparture: string;
+	duration: string;
+	connection: string;
+	timeArrival: string;
+}
+
+export interface AirlineTicketProps {
+	departureDate: string;
+	arrivalDate: string;
+	company: string;
+	departureFlights: FlightProps[];
+	arrivalFlights: FlightProps[];
+	priceTax: string;
+	priceWithoutTax: string;
+	priceTotal: string;
+}
+
 const cleanVariables = () => {
 	flightDates = [];
 	departure = [];
@@ -12,17 +32,17 @@ const cleanVariables = () => {
 	prices = new Set();
 };
 
-const createFlightObj = (data: string[]) => {
+const createFlightObj = (data: string[]): FlightProps[] => {
 	let result = [];
 
 	for (let i = 0; i < data.length / 7; i++) {
 		result.push({
 			company: data[i * 7],
 			airport: data[i * 7 + 1],
-			time_departure: data[i * 7 + 2],
+			timeDeparture: data[i * 7 + 2],
 			duration: data[i * 7 + 3],
 			connection: data[i * 7 + 4],
-			time_arrival: data[i * 7 + 6],
+			timeArrival: data[i * 7 + 6],
 		});
 	}
 
@@ -46,7 +66,7 @@ const addValueIntoArr = (item: string) => {
 	}
 };
 
-export const transformData = (obj: string[]) => {
+export const transformData = (obj: string[]): AirlineTicketProps => {
 	const hasData = obj.length > 0;
 
 	if (!hasData) return;
@@ -69,13 +89,14 @@ export const transformData = (obj: string[]) => {
 	const newPrices = Array.from(prices);
 
 	const dataFormated = {
-		ida: initialDate,
-		schedules_ida: newDepartures,
-		volta: finalDate,
-		schedules_volta: newArrivals,
-		price__without_tax: newPrices[1],
-		price_tax: newPrices[2],
-		price_total: newPrices[newPrices.length - 1],
+		departureDate: initialDate,
+		arrivalDate: finalDate,
+		company: newDepartures[0].company,
+		departureFlights: newDepartures,
+		arrivalFlights: newArrivals,
+		priceTax: newPrices[2] as string,
+		priceWithoutTax: newPrices[1] as string,
+		priceTotal: newPrices[newPrices.length - 1] as string,
 	};
 
 	cleanVariables();

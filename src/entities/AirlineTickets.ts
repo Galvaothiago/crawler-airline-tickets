@@ -1,4 +1,4 @@
-import {Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, Relation} from "typeorm";
 import {ArrivalFlight} from "./ArrivalFlight";
 import {DepartureFlight} from "./DepartureFlight";
 
@@ -16,11 +16,11 @@ export class AirlineTicket {
 	@Column()
 	company: string;
 
-	@OneToMany(() => DepartureFlight, departureFlights => departureFlights.id)
-	departureFlight: DepartureFlight[];
+	@OneToMany(() => DepartureFlight, departureFlights => departureFlights.airlineTicket, {cascade: true})
+	departureFlights?: Relation<DepartureFlight>[];
 
-	@OneToMany(() => ArrivalFlight, arrivalFlights => arrivalFlights.id)
-	arrivalFlight: ArrivalFlight[];
+	@OneToMany(() => ArrivalFlight, arrivalFlights => arrivalFlights.airlineTicket, {cascade: true})
+	arrivalFlights?: Relation<ArrivalFlight>[];
 
 	@Column({name: "price_without_tax"})
 	priceWithoutTax: string;

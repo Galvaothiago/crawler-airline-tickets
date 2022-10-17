@@ -44,7 +44,6 @@ export const checkValidDates = (initialDate: string, finalDate: string): boolean
 	const initialDateObj = new Date(initialDate).getTime();
 	const finalDateObj = new Date(finalDate).getTime();
 
-	console.log({currentDate, maxDatePermited, initialDateObj, finalDateObj});
 	if (initialDateObj > currentDate.getTime() && finalDateObj < maxDatePermited.getTime()) {
 		return true;
 	}

@@ -1,11 +1,12 @@
-import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} from "typeorm";
 
 @Entity()
 export class Job {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
-	@Column({name: "created_at"})
+	@CreateDateColumn()
+	@Column({type: Date, name: "created_at"})
 	createdAt: Date;
 
 	@Column({name: "departure_airport"})
@@ -23,6 +24,6 @@ export class Job {
 	@Column({name: "times_to_execute"})
 	timesToRun: number;
 
-	@Column({name: "times_executed"})
+	@Column({name: "times_executed", nullable: true})
 	timesExecuted: number;
 }

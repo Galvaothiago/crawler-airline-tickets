@@ -13,6 +13,9 @@ export class JobService {
 			const validationDate = checkValidDates(createJobDto.departureDate, createJobDto.arrivalDate);
 
 			if (validationDate) {
+				createJobDto.timesExecuted = 0;
+				createJobDto.createdAt = new Date();
+
 				const job = this.jobRepository.create(createJobDto);
 				await this.jobRepository.save(job);
 				return job;
