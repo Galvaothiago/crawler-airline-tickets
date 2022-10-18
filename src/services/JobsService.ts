@@ -1,4 +1,4 @@
-import {checkValidDates} from "../../src/utils";
+import {checkValidDates} from "../../utils/dates-utils";
 import AppDataSource from "../../src/database";
 import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {Job} from "../../src/entities/Jobs";

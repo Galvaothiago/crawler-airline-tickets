@@ -1,6 +1,6 @@
 import nodeCron from "node-cron";
 import {CreateAirlineTicketsDto} from "../../src/entities/dto/CreateAirlineTicketsDto";
-import {getAlternativesDate} from "../../src/utils";
+import {getAlternativesDate} from "../../utils/dates-utils";
 import {Crawler} from "./Crawler";
 import {JobService} from "./JobsService";
 import {v4 as uuid} from "uuid";

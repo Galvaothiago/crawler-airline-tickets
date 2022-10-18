@@ -1,6 +1,6 @@
 import puppeteer from "puppeteer";
 
-import {AirlineTicketProps, transformData} from "../transformData.js";
+import {AirlineTicketProps, transformData} from "../../utils/transformData.js";
 
 export class Crawler {
 	private browser: any;
