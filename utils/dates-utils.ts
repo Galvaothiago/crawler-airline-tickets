@@ -2,12 +2,19 @@ const incrementOrDecrementDate = (date: string, day: number) => {
 	const currentDate = new Date(date);
 
 	switch (day) {
+		case 0:
+			break;
 		case 1:
 			currentDate.setDate(currentDate.getDate() + 1);
+			break;
+		case 2:
+			currentDate.setDate(currentDate.getDate() + 2);
 			break;
 		case -1:
 			currentDate.setDate(currentDate.getDate() - 1);
 			break;
+		case -2:
+			currentDate.setDate(currentDate.getDate() - 2);
 		default:
 			break;
 	}
@@ -24,9 +31,9 @@ const incrementOrDecrementDate = (date: string, day: number) => {
 export const getAlternativesDate = (initialDate: string, finalDate: string): string[][] => {
 	const alternativeDates: Set<string[]> = new Set();
 
-	for (let i = 0; i < 3; i++) {
-		for (let j = 0; j < 3; j++) {
-			const dates = [incrementOrDecrementDate(initialDate, i - 1), incrementOrDecrementDate(finalDate, j - 1)];
+	for (let i = 0; i < 4; i++) {
+		for (let j = 0; j < 4; j++) {
+			const dates = [incrementOrDecrementDate(initialDate, i - 2), incrementOrDecrementDate(finalDate, j - 2)];
 
 			alternativeDates.add(dates);
 		}

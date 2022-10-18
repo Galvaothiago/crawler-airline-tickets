@@ -33,7 +33,7 @@ export class Schedule {
 				const puppeteer = new Crawler();
 				await puppeteer.init();
 
-				const {id, departureDate, arrivalDate, departureAirport, arrivalAirport, timesExecuted} = jobs[k];
+				const {id, departureDate, arrivalDate, departureAirport, arrivalAirport} = jobs[k];
 
 				const alternativesDates: string[][] = getAlternativesDate(String(departureDate), String(arrivalDate));
 
