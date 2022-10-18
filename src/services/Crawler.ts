@@ -14,12 +14,12 @@ export class Crawler {
 	}
 
 	addParamsURL(departure: string, arrival: string, initialDate: string, finalDate: string) {
-		this.url = `https://www.maxmilhas.com.br/busca-passagens-aereas/RT/${departure}/${arrival}/${initialDate}/${finalDate}/1/0/0/EC`;
+		this.url = `${process.env.URL_TO_CRAWLER}${departure}/${arrival}/${initialDate}/${finalDate}/1/0/0/EC`;
 	}
 
 	async init() {
 		this.browser = await puppeteer.launch({
-			headless: false,
+			headless: true,
 		});
 		this.page = await this.browser.newPage();
 

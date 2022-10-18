@@ -11,8 +11,22 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 	res.json(airlines);
 });
 
-router.get("/date", async (req: Request, res: Response, next: NextFunction) => {
-	const airlines = await airlineService.findBetweenDate("2022-10-15T19:09:12.000Z", "2022-10-15T18:09:12.000Z");
+router.get("/:date/:hours", async (req: Request, res: Response, next: NextFunction) => {
+	const date = req.params.date;
+	const hours = req.params.hours;
+
+	console.log({date, hours});
+	if (!date || !hours) {
+		res.status(400).json({message: "Invalid parameters"});
+	}
+	const newHour = hours?.split("-");
+
+	const newDates = {
+		initial: `${date}T${newHour[1]}:00:00.000Z`,
+		final: `${date}T${newHour[0]}:59:59.999Z`,
+	};
+
+	const airlines = await airlineService.findBetweenDate(newDates.final, newDates.initial);
 	res.json(airlines);
 });
 

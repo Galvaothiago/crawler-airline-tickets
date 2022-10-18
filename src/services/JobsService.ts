@@ -27,6 +27,27 @@ export class JobService {
 		}
 	}
 
+	async getAllJobsCanExecute() {
+		try {
+			const jobs = await this.jobRepository.find({
+				take: 10,
+			});
+
+			const jobsCanExecute = jobs.filter(job => {
+				const maxTimesToRun = job.timesToRun;
+				const timesExecuted = job.timesExecuted;
+
+				if (timesExecuted < maxTimesToRun) {
+					return job;
+				}
+			});
+
+			return jobsCanExecute;
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
 	async getAllJobs() {
 		try {
 			return await this.jobRepository.find();

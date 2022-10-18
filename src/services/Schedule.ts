@@ -21,7 +21,11 @@ export class Schedule {
 
 	async execute() {
 		const job = nodeCron.schedule(this.schedulePattern, async () => {
-			const jobs = await this.jobService.getAllJobs();
+			const jobs = await this.jobService.getAllJobsCanExecute();
+
+			if (jobs.length === 0) {
+				console.log("No jobs to execute");
+			}
 
 			for (let k = 0; k < jobs.length; k++) {
 				console.log("Job started: ", jobs[k].id);

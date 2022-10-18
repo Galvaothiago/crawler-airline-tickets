@@ -38,8 +38,8 @@ export class AirlineTicketsService {
 		try {
 			const airlineTickets = await this.airlineRepository
 				.createQueryBuilder("airlineTicket")
-				.where("airlineTicket.createdAt >= :startDate", {startDate: new Date("2022-10-15T20:00:00.000Z")})
-				.andWhere("airlineTicket.createdAt <= :endDate", {endDate: new Date("2022-10-16T00:00:00.000Z")})
+				.where("airlineTicket.createdAt >= :startDate", {startDate: new Date(initialDate)})
+				.andWhere("airlineTicket.createdAt <= :endDate", {endDate: new Date(finalDate)})
 				.getMany();
 
 			return airlineTickets;
