@@ -15,10 +15,10 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 	const date = req.params.date;
 	const hours = req.params.hours;
 
-	console.log({date, hours});
 	if (!date || !hours) {
 		res.status(400).json({message: "Invalid parameters"});
 	}
+
 	const newHour = hours?.split("-");
 
 	const newDates = {

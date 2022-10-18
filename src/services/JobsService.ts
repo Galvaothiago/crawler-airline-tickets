@@ -1,10 +1,18 @@
-import {checkValidDates} from "../../utils/dates-utils";
+import {checkValidDates, getAlternativesDate} from "../../utils/dates-utils";
 import AppDataSource from "../../src/database";
 import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {Job} from "../../src/entities/Jobs";
+import {AirlineTicketsService} from "./AirlineTicketsService";
+import {Crawler} from "./Crawler";
+import {CreateAirlineTicketsDto} from "../../src/entities/dto/CreateAirlineTicketsDto";
+
+import {v4 as uuid} from "uuid";
+import {ArrivalFlight} from "../../src/entities/ArrivalFlight";
 
 export class JobService {
 	private jobRepository = AppDataSource.getRepository(Job);
+	private airlineService = new AirlineTicketsService();
+	private puppeteer = new Crawler();
 
 	constructor() {}
 
@@ -94,6 +102,82 @@ export class JobService {
 			}
 		} catch (err) {
 			console.error(err);
+		}
+	}
+
+	async executeCrawler(jobs: Job[]) {
+		for (let k = 0; k < jobs.length; k++) {
+			console.log("Job started: ", jobs[k].id);
+
+			await this.puppeteer.init();
+
+			const {id, departureDate, arrivalDate, departureAirport, arrivalAirport} = jobs[k];
+
+			const alternativesDates: string[][] = getAlternativesDate(String(departureDate), String(arrivalDate));
+
+			for (let i = 0; i < alternativesDates.length; i++) {
+				const [initialDate, finalDate] = alternativesDates[i];
+				try {
+					const data = await this.puppeteer.searchFlight(departureAirport, arrivalAirport, initialDate, finalDate);
+
+					for (const item of data) {
+						const airline: CreateAirlineTicketsDto = new CreateAirlineTicketsDto();
+
+						airline.id = uuid();
+
+						airline.company = item.company;
+						airline.arrivalDate = item.arrivalDate;
+						airline.departureDate = item.departureDate;
+						airline.priceTax = item.priceTax;
+						airline.priceWithoutTax = item.priceWithoutTax;
+						airline.priceTotal = item.priceTotal;
+
+						airline.createdAt = new Date();
+
+						const newItemArrival = item.arrivalFlights.filter(item => {
+							if (item.airport && item.connection) {
+								return item;
+							}
+						});
+
+						airline.arrivalFlights = newItemArrival.map(arrFligth => {
+							const arrivalFlight = new ArrivalFlight();
+
+							arrivalFlight.airport = arrFligth.airport;
+							arrivalFlight.connection = arrFligth.connection;
+							arrivalFlight.duration = arrFligth.duration;
+							arrivalFlight.timeArrival = arrFligth.timeArrival;
+							arrivalFlight.timeDeparture = arrFligth.timeDeparture;
+
+							return arrivalFlight;
+						});
+
+						const newItemDeparture = item.departureFlights.filter(item => {
+							if (item.airport && item.connection) {
+								return item;
+							}
+						});
+
+						airline.departureFlights = newItemDeparture.map(depFligth => {
+							const departureFlight = new ArrivalFlight();
+
+							departureFlight.airport = depFligth.airport;
+							departureFlight.connection = depFligth.connection;
+							departureFlight.duration = depFligth.duration;
+							departureFlight.timeArrival = depFligth.timeArrival;
+							departureFlight.timeDeparture = depFligth.timeDeparture;
+
+							return departureFlight;
+						});
+
+						await this.airlineService.createAirlineTicket(airline);
+					}
+				} catch (err) {
+					console.log(err);
+				}
+			}
+			await this.puppeteer.close();
+			await this.incrementTimesExecuted(id);
 		}
 	}
 }
