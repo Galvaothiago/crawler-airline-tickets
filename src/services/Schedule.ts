@@ -14,7 +14,7 @@ export class Schedule {
 	airlineService: AirlineTicketsService;
 
 	constructor() {
-		this.schedulePattern = "*/3 * * * *";
+		this.schedulePattern = "0 * * * *";
 		this.jobService = new JobService();
 		this.airlineService = new AirlineTicketsService();
 	}
