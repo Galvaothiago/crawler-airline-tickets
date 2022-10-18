@@ -36,11 +36,11 @@ export class AirlineTicketsService {
 
 	async findBetweenDate(initialDate: string, finalDate: string) {
 		try {
-			const airlineTickets = await this.airlineRepository
-				.createQueryBuilder("airlineTicket")
-				.where("airlineTicket.createdAt >= :startDate", {startDate: new Date(initialDate)})
-				.andWhere("airlineTicket.createdAt <= :endDate", {endDate: new Date(finalDate)})
-				.getMany();
+			const airlineTickets = await this.airlineRepository.find({
+				where: {
+					createdAt: Between(new Date(initialDate), new Date(finalDate)),
+				},
+			});
 
 			return airlineTickets;
 		} catch (err) {
