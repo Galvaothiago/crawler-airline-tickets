@@ -1,5 +1,4 @@
 import puppeteer from "puppeteer";
-import {Cluster} from "puppeteer-cluster";
 
 import {AirlineTicketProps, transformData} from "../transformData.js";
 
@@ -20,11 +19,7 @@ export class Crawler {
 
 	async init() {
 		this.browser = await puppeteer.launch({
-			headless: true,
-			args: [
-				"--no-sandbox",
-				"--disable-dev-shm-usage", // <-- add this one
-			],
+			headless: false,
 		});
 		this.page = await this.browser.newPage();
 
@@ -45,8 +40,8 @@ export class Crawler {
 	}
 
 	async close() {
-		await this.browser.close();
 		await this.page.close();
+		await this.browser.close();
 
 		this.browser = null;
 		this.page = null;
@@ -77,9 +72,9 @@ export class Crawler {
 					});
 				}
 
-				await delay(5000);
+				await delay(6000);
 
-				for (let i = 0; i < 100; i++) {
+				for (let i = 0; i < 50; i++) {
 					if (result.length >= Number(airlineTicketsFound) || scrollValue > 10000) {
 						return result;
 					}
@@ -106,6 +101,7 @@ export class Crawler {
 			});
 
 			const formatContent = (content: string) => {
+				if (!content) return [];
 				const arr = content?.split("Detalhes").join("").split("\n");
 
 				return arr;

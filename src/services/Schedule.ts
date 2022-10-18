@@ -14,7 +14,7 @@ export class Schedule {
 	airlineService: AirlineTicketsService;
 
 	constructor() {
-		this.schedulePattern = "*/1 * * * *";
+		this.schedulePattern = "*/3 * * * *";
 		this.jobService = new JobService();
 		this.airlineService = new AirlineTicketsService();
 	}
@@ -25,7 +25,6 @@ export class Schedule {
 
 			for (let k = 0; k < jobs.length; k++) {
 				console.log("Job started: ", jobs[k].id);
-				const startTime = performance.now();
 
 				const puppeteer = new Crawler();
 				await puppeteer.init();
@@ -91,17 +90,12 @@ export class Schedule {
 
 							await this.airlineService.createAirlineTicket(airline);
 						}
-
-						await puppeteer.close();
 					} catch (err) {
 						console.log(err);
 					}
 				}
 				await puppeteer.close();
 				await this.jobService.incrementTimesExecuted(id);
-
-				const endTime = performance.now();
-				console.log(`finalized in ${(endTime - startTime) / 1000} seconds`, id);
 			}
 		});
 

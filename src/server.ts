@@ -19,10 +19,11 @@ app.use("/airline-tickets", RouterAirlineTickets);
 
 const job = new Schedule();
 
+const jobSchedule = await job.execute();
+
+jobSchedule.start();
 app.listen(port, async () => {
 	await AppDataSource.initialize();
-	const jobSchedule = await job.execute();
 
-	jobSchedule.start();
 	console.log(`Server is running on port ${port}`);
 });
