@@ -19,9 +19,9 @@ export class ArrivalFlight {
 	@Column()
 	connection: string;
 
-	@Column({name: "time_departure"})
+	@Column({name: "time_departure", nullable: true})
 	timeDeparture: string;
 
-	@Column({name: "time_arrival"})
+	@Column({name: "time_arrival", nullable: true})
 	timeArrival: string;
 }

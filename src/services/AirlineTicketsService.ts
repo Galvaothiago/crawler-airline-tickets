@@ -40,6 +40,9 @@ export class AirlineTicketsService {
 				where: {
 					createdAt: Between(new Date(initialDate), new Date(finalDate)),
 				},
+				order: {
+					priceTotal: "ASC",
+				},
 			});
 
 			return airlineTickets;

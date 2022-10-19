@@ -22,8 +22,8 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 	const newHour = hours?.split("-");
 
 	const newDates = {
-		initial: `${date}T${newHour[1]}:00:00.000Z`,
-		final: `${date}T${newHour[0]}:59:59.999Z`,
+		initial: `${date} ${newHour[1]}:00:00.000`,
+		final: `${date} ${newHour[0]}:59:59.999`,
 	};
 
 	const airlines = await airlineService.findBetweenDate(newDates.final, newDates.initial);

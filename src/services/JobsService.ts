@@ -3,11 +3,11 @@ import AppDataSource from "../../src/database";
 import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {Job} from "../../src/entities/Jobs";
 import {AirlineTicketsService} from "./AirlineTicketsService";
-import {Crawler} from "./Crawler";
+import {ArrivalFlight} from "../../src/entities/ArrivalFlight";
 import {CreateAirlineTicketsDto} from "../../src/entities/dto/CreateAirlineTicketsDto";
 
+import {Crawler} from "./Crawler";
 import {v4 as uuid} from "uuid";
-import {ArrivalFlight} from "../../src/entities/ArrivalFlight";
 
 export class JobService {
 	private jobRepository = AppDataSource.getRepository(Job);

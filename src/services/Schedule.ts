@@ -17,7 +17,7 @@ export class Schedule {
 				console.log("No jobs to execute");
 			}
 
-			// await this.jobService.executeCrawler(jobs);
+			await this.jobService.executeCrawler(jobs);
 		});
 
 		return job;
