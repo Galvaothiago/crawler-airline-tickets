@@ -26,7 +26,9 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 		final: `${date} ${newHour[0]}:59:59.999`,
 	};
 
-	const airlines = await airlineService.findBetweenDate(newDates.final, newDates.initial);
+	console.log(newDates);
+
+	const airlines = await airlineService.findBetweenDate(newDates.initial, newDates.final);
 	res.json(airlines);
 });
 

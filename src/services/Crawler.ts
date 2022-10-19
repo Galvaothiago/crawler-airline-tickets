@@ -1,6 +1,12 @@
 import puppeteer from "puppeteer";
+import {Cluster} from "puppeteer-cluster";
 
-import {AirlineTicketProps, transformData} from "../../utils/transformData.js";
+export interface InformationFlight {
+	departure: string;
+	arrival: string;
+	initialDate: string;
+	finalDate: string;
+}
 
 export class Crawler {
 	private browser: any;
@@ -29,6 +35,18 @@ export class Crawler {
 		});
 	}
 
+	async initPuppeteerCluster() {
+		const cluster = await Cluster.launch({
+			concurrency: Cluster.CONCURRENCY_CONTEXT,
+			maxConcurrency: 10,
+			puppeteerOptions: {
+				headless: true,
+			},
+		});
+
+		return cluster;
+	}
+
 	async awaitForXpath(xpath: string) {
 		await this.page.waitForXPath(xpath);
 	}
@@ -48,78 +66,5 @@ export class Crawler {
 		this.url = "";
 	}
 
-	async searchFlight(departure: string, arrival: string, initialDate: string, finalDate: string) {
-		try {
-			this.addParamsURL(departure, arrival, initialDate, finalDate);
-
-			await this.navigateTo(this.url);
-			await this.awaitForXpath('//*[@id="__next"]/div[3]/section/div[4]/div[2]/div[1]/div/div[1]');
-
-			const data = await this.page.evaluate(async () => {
-				let result = [];
-				let scrollValue = 0;
-
-				const elementQuantiAirTickets: HTMLElement | null = document.querySelector(".css-7zc1qr");
-				const airlineTicketsFound = Number(elementQuantiAirTickets?.innerText.split(" ")[0]);
-
-				function scrollPage(value: number) {
-					window.scrollTo(0, value);
-				}
-
-				function delay(time: number) {
-					return new Promise(function (resolve) {
-						setTimeout(resolve, time);
-					});
-				}
-
-				await delay(6000);
-
-				for (let i = 0; i < 50; i++) {
-					if (result.length >= Number(airlineTicketsFound) || scrollValue > 10000) {
-						return result;
-					}
-
-					let container: HTMLElement | null = document.querySelector(`[data-index="${i}"]`);
-
-					if (container) {
-						result.push(container.innerText);
-						container = null;
-						await delay(300);
-					} else {
-						scrollPage((scrollValue += 700));
-						await delay(600);
-
-						container = document.querySelector(`[data-index="${i}"]`);
-
-						if (container) {
-							result.push(container.innerText);
-							container = null;
-							await delay(300);
-						}
-					}
-				}
-			});
-
-			const formatContent = (content: string) => {
-				if (!content) return [];
-				const arr = content?.split("Detalhes").join("").split("\n");
-
-				return arr;
-			};
-
-			if (!data) {
-				return [];
-			}
-
-			const result: AirlineTicketProps[] = data.map((item: string) => {
-				const content = formatContent(item);
-
-				return transformData(content);
-			});
-
-			return result;
-		} catch (err) {
-			console.log(err);
-		}
-	}
+	async searchFlight(page, info: InformationFlight) {}
 }

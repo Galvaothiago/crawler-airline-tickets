@@ -6,7 +6,7 @@ export class Schedule {
 	jobService: JobService;
 
 	constructor() {
-		this.schedulePattern = "*/5 * * * *";
+		this.schedulePattern = "0 * * * *";
 		this.jobService = new JobService();
 	}
 
