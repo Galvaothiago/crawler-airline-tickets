@@ -9,8 +9,8 @@ export class CreateAirlineTicketsDto {
 	company: string;
 	departureFlights?: DepartureFlight[];
 	arrivalFlights?: ArrivalFlight[];
-	priceTax: string;
-	priceWithoutTax: string;
-	priceTotal: string;
+	priceTax: number;
+	priceWithoutTax: number;
+	priceTotal: number;
 	createdAt: Date;
 }

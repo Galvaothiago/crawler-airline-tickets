@@ -6,7 +6,7 @@ export class Schedule {
 	jobService: JobService;
 
 	constructor() {
-		this.schedulePattern = "* * * * *";
+		this.schedulePattern = "*/5 * * * *";
 		this.jobService = new JobService();
 	}
 
@@ -17,7 +17,7 @@ export class Schedule {
 				console.log("No jobs to execute");
 			}
 
-			await this.jobService.executeCrawler(jobs);
+			// await this.jobService.executeCrawler(jobs);
 		});
 
 		return job;

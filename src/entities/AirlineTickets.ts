@@ -22,14 +22,14 @@ export class AirlineTicket {
 	@OneToMany(() => ArrivalFlight, arrivalFlights => arrivalFlights.airlineTicket, {cascade: true})
 	arrivalFlights?: Relation<ArrivalFlight>[];
 
-	@Column({name: "price_without_tax"})
-	priceWithoutTax: string;
+	@Column({type: "float", name: "price_without_tax"})
+	priceWithoutTax: number;
 
-	@Column({name: "price_tax"})
-	priceTax: string;
+	@Column({type: "float", name: "price_tax"})
+	priceTax: number;
 
-	@Column({name: "price_total"})
-	priceTotal: string;
+	@Column({type: "float", name: "price_total"})
+	priceTotal: number;
 
 	@Column({name: "created_at"})
 	createdAt: Date;

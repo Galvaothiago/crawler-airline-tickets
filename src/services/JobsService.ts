@@ -12,7 +12,7 @@ import {ArrivalFlight} from "../../src/entities/ArrivalFlight";
 export class JobService {
 	private jobRepository = AppDataSource.getRepository(Job);
 	private airlineService = new AirlineTicketsService();
-	private puppeteer = new Crawler();
+	private puppeteer: Crawler;
 
 	constructor() {}
 
@@ -105,10 +105,21 @@ export class JobService {
 		}
 	}
 
+	convertStringMoneyToNumber(money: string) {
+		const moneyWithoutDollar = money.replace("R$", "");
+		const moneyWithoutComma = moneyWithoutDollar.replace(",", "-");
+		const moneyWithoutDot = moneyWithoutComma.replace(".", "");
+		const moneyWithoutDash = moneyWithoutDot.replace("-", ".");
+		const moneyWithoutSpace = moneyWithoutDash.replace(" ", "");
+
+		return Number(moneyWithoutSpace);
+	}
+
 	async executeCrawler(jobs: Job[]) {
 		for (let k = 0; k < jobs.length; k++) {
 			console.log("Job started: ", jobs[k].id);
 
+			this.puppeteer = new Crawler();
 			await this.puppeteer.init();
 
 			const {id, departureDate, arrivalDate, departureAirport, arrivalAirport} = jobs[k];
@@ -128,9 +139,9 @@ export class JobService {
 						airline.company = item.company;
 						airline.arrivalDate = item.arrivalDate;
 						airline.departureDate = item.departureDate;
-						airline.priceTax = item.priceTax;
-						airline.priceWithoutTax = item.priceWithoutTax;
-						airline.priceTotal = item.priceTotal;
+						airline.priceTax = this.convertStringMoneyToNumber(item.priceTax);
+						airline.priceWithoutTax = this.convertStringMoneyToNumber(item.priceWithoutTax);
+						airline.priceTotal = this.convertStringMoneyToNumber(item.priceTotal);
 
 						airline.createdAt = new Date();
 
