@@ -38,7 +38,7 @@ export class Crawler {
 	async initPuppeteerCluster() {
 		const cluster = await Cluster.launch({
 			concurrency: Cluster.CONCURRENCY_CONTEXT,
-			maxConcurrency: 10,
+			maxConcurrency: Number(process.env.PUPPETEER_CLUSTER_MAX_CONCURRENCY),
 			puppeteerOptions: {
 				headless: true,
 			},

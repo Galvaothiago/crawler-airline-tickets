@@ -121,6 +121,7 @@ export class JobService {
 	async executeCrawler(jobs: Job[]) {
 		for (let k = 0; k < jobs.length; k++) {
 			let cluster = await this.puppeteer.initPuppeteerCluster();
+
 			console.log("Job started: ", jobs[k].id);
 
 			const {id, departureDate, arrivalDate, departureAirport, arrivalAirport} = jobs[k];
