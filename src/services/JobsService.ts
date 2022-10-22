@@ -280,13 +280,4 @@ export class JobService {
 			console.timeEnd("Job time");
 		}
 	}
-
-	async executeJob({page, data}) {
-		const infos: InformationFlight = {...data};
-		try {
-			const data = await this.puppeteer.searchFlight(page, infos);
-		} catch (err) {
-			console.log(err);
-		}
-	}
 }
