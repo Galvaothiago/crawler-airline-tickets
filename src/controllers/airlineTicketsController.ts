@@ -6,15 +6,19 @@ const router = express.Router();
 const airlineService = new AirlineTicketsService();
 
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
-	const airlines = await airlineService.findAll();
+	const pagination = Number(req.params.pagination ?? 20);
+	const takePage = Number(req.params.takePage ?? 0);
 
-	res.json(airlines);
+	const airlineTickets = await airlineService.findAll(pagination, takePage);
+
+	res.json(airlineTickets);
 });
 
 router.get("/:date/:hours", async (req: Request, res: Response, next: NextFunction) => {
 	const date = req.params.date;
 	const hours = req.params.hours;
 
+	req.params;
 	if (!date || !hours) {
 		res.status(400).json({message: "Invalid parameters"});
 	}
@@ -26,10 +30,19 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 		final: `${date} ${newHour[0]}:59:59.999`,
 	};
 
-	console.log(newDates);
-
 	const airlines = await airlineService.findBetweenDate(newDates.initial, newDates.final);
 	res.json(airlines);
+});
+
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+	const id = req.params.id;
+
+	if (!id) {
+		res.status(400).json({message: "Invalid parameters"});
+	}
+
+	const airline = await airlineService.findById(id);
+	res.json(airline);
 });
 
 router.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {

@@ -19,18 +19,41 @@ export class AirlineTicketsService {
 		}
 	}
 
-	async findAll() {
+	async findAll(pagination: number, takePage: number) {
+		takePage = pagination ?? 0;
+
 		try {
 			const airlineTickets = await this.airlineRepository.find({
+				skip: takePage,
+				take: pagination,
+			});
+
+			return airlineTickets;
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	async findById(id: string) {
+		try {
+			const airlineTickets = this.airlineRepository.findOne({
+				where: {
+					id,
+				},
 				relations: {
 					arrivalFlights: true,
 					departureFlights: true,
 				},
 			});
 
+			if (!id) {
+				// 	TODO logar error em algum lugar
+				throw new Error("Airline Ticket not found");
+			}
+
 			return airlineTickets;
 		} catch (err) {
-			console.error(err);
+			console.error(err.message);
 		}
 	}
 
