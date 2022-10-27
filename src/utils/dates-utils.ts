@@ -15,6 +15,7 @@ const incrementOrDecrementDate = (date: string, day: number) => {
 			break;
 		case -2:
 			currentDate.setDate(currentDate.getDate() - 2);
+			break;
 		default:
 			break;
 	}

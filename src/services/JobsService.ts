@@ -263,6 +263,7 @@ export class JobService {
 
 			for (let i = 0; i < alternativesDates.length; i++) {
 				const [initialDate, finalDate] = alternativesDates[i];
+
 				const information: InformationFlight = {
 					departure: departureAirport,
 					arrival: arrivalAirport,
