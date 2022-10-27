@@ -7,7 +7,7 @@ export class Schedule {
 	jobService: JobService;
 
 	constructor() {
-		this.schedulePattern = EnumSchedulePattern.EVERY_15_MINUTES;
+		this.getHoursFromServerAndCompare();
 		this.jobService = new JobService();
 	}
 
@@ -38,11 +38,11 @@ export class Schedule {
 		const midnightHour = 0;
 		const morningHour = 6;
 
-		if (currentHour >= midnightHour && currentHour < morningHour) {
-			this.setSchedulePattern(EnumSchedulePattern.EVERY_45_MINUTES);
+		if (currentHour >= midnightHour && currentHour <= morningHour) {
+			this.setSchedulePattern(EnumSchedulePattern.EVERY_30_MINUTES);
 			return;
 		}
 
-		this.setSchedulePattern(EnumSchedulePattern.EVERY_1_MINUTES);
+		this.setSchedulePattern(EnumSchedulePattern.EVERY_HOUR);
 	}
 }
