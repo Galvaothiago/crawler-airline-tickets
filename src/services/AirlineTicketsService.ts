@@ -9,7 +9,7 @@ export class AirlineTicketsService {
 
 	constructor() {}
 
-	async createAirlineTicket(airlineTicketDto: CreateAirlineTicketsDto) {
+	async createAirlineTicket(airlineTicketDto: CreateAirlineTicketsDto[]) {
 		try {
 			const airline = this.airlineRepository.create(airlineTicketDto);
 			await this.airlineRepository.save(airline);

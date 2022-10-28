@@ -207,6 +207,8 @@ export class JobService {
 
 				const result = await func(info);
 
+				const airlineList: CreateAirlineTicketsDto[] = []
+
 				for (const item of result) {
 					const airline: CreateAirlineTicketsDto = new CreateAirlineTicketsDto();
 
@@ -257,8 +259,9 @@ export class JobService {
 						return departureFlight;
 					});
 
-					await this.airlineService.createAirlineTicket(airline);
+					airlineList.push(airline);
 				}
+				await this.airlineService.createAirlineTicket(airlineList);
 			});
 
 			for (let i = 0; i < alternativesDates.length; i++) {
