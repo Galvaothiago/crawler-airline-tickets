@@ -1,4 +1,5 @@
 import express, {NextFunction, Request, Response} from "express";
+import {getIATACodeAirport} from "src/services/enumIATA-Code";
 import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {JobService} from "../../src/services/JobsService";
 
@@ -14,6 +15,9 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 
 router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 	const job: CreateJobDto = req.body;
+
+	job.departureAirport = getIATACodeAirport(job.departureAirport);
+	job.arrivalAirport = getIATACodeAirport(job.arrivalAirport);
 
 	await jobService.createJob(job);
 

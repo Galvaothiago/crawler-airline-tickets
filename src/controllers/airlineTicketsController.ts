@@ -17,20 +17,30 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 router.get("/:date/:hours", async (req: Request, res: Response, next: NextFunction) => {
 	const date = req.params.date;
 	const hours = req.params.hours;
+	let paramsDate = {
+		initial: "",
+		final: "",
+	};
 
-	req.params;
 	if (!date || !hours) {
 		res.status(400).json({message: "Invalid parameters"});
 	}
 
-	const newHour = hours?.split("-");
+	if (hours === "full") {
+		paramsDate = {
+			initial: `${date} 00:00:00`,
+			final: `${date} 23:59:59`,
+		};
+	} else {
+		const newHour = hours?.split("-");
 
-	const newDates = {
-		initial: `${date} ${newHour[1]}:00:00.000`,
-		final: `${date} ${newHour[0]}:59:59.999`,
-	};
+		paramsDate = {
+			initial: `${date} ${newHour[1]}:00:00`,
+			final: `${date} ${newHour[0]}:59:59`,
+		};
+	}
 
-	const airlines = await airlineService.findBetweenDate(newDates.initial, newDates.final);
+	const airlines = await airlineService.findBetweenDate(paramsDate.initial, paramsDate.final);
 	res.json(airlines);
 });
 
@@ -47,7 +57,7 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 
 router.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
 	await airlineService.deleteAirlineTickets(req.params.id);
-	res.status(204).json({});
+	res.status(200).json({});
 });
 
 export default router;
