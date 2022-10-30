@@ -10,7 +10,7 @@ import RouterAirlineTickets from "./controllers/airlineTicketsController";
 const app: Express = express();
 dotenv.config();
 
-const port = process.env.PORT || 3333;
+const port = process.env.PORT ?? 3333;
 
 app.use(express.json());
 
@@ -18,11 +18,10 @@ app.use("/job", RouterJobs);
 app.use("/airline-tickets", RouterAirlineTickets);
 
 const job = new Schedule();
-
 const jobSchedule = await job.execute();
 
-jobSchedule.start();
 app.listen(port, async () => {
+	jobSchedule.start();
 	await AppDataSource.initialize();
 
 	console.log(`Server is running on port ${port}`);

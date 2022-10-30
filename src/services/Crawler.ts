@@ -65,6 +65,4 @@ export class Crawler {
 		this.page = null;
 		this.url = "";
 	}
-
-	async searchFlight(page, info: InformationFlight) {}
 }

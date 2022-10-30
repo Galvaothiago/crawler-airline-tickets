@@ -31,10 +31,15 @@ const incrementOrDecrementDate = (date: string, day: number) => {
 
 export const getAlternativesDate = (initialDate: string, finalDate: string): string[][] => {
 	const alternativeDates: Set<string[]> = new Set();
+	const MAX_NUMBER_TO_PERMUTE = 4; // Will be used to limit the number of permutations, (4! = 24) for each date it will return 24 alternative dates
+	const MAX_DAY_TO_SUBSTRACT = 2; // Will be used to limit the number of days to substract from the initial date
 
-	for (let i = 0; i < 4; i++) {
-		for (let j = 0; j < 4; j++) {
-			const dates = [incrementOrDecrementDate(initialDate, i - 2), incrementOrDecrementDate(finalDate, j - 2)];
+	for (let i = 0; i < MAX_NUMBER_TO_PERMUTE; i++) {
+		for (let j = 0; j < MAX_NUMBER_TO_PERMUTE; j++) {
+			const dates = [
+				incrementOrDecrementDate(initialDate, i - MAX_DAY_TO_SUBSTRACT),
+				incrementOrDecrementDate(finalDate, j - MAX_DAY_TO_SUBSTRACT),
+			];
 
 			alternativeDates.add(dates);
 		}
