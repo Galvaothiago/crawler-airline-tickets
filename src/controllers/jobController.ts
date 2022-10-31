@@ -1,5 +1,5 @@
 import express, {NextFunction, Request, Response} from "express";
-import {getIATACodeAirport} from "src/services/enumIATA-Code";
+import {getIATACodeAirport} from "../../src/services/enumIATA-Code";
 import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {JobService} from "../../src/services/JobsService";
 
