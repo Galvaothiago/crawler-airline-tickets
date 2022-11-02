@@ -207,7 +207,7 @@ export class JobService {
 
 				const result = await func(info);
 
-				const airlineList: CreateAirlineTicketsDto[] = []
+				const airlineList: CreateAirlineTicketsDto[] = [];
 
 				for (const item of result) {
 					const airline: CreateAirlineTicketsDto = new CreateAirlineTicketsDto();
@@ -217,9 +217,18 @@ export class JobService {
 					airline.company = item.company;
 					airline.arrivalDate = item.arrivalDate;
 					airline.departureDate = item.departureDate;
-					airline.priceTax = this.convertStringMoneyToNumber(item.priceTax);
-					airline.priceWithoutTax = this.convertStringMoneyToNumber(item.priceWithoutTax);
+					airline.priceWithoutTax =
+						typeof item.priceWithoutTax === "number" ? this.convertStringMoneyToNumber(item.priceWithoutTax) : 0;
 					airline.priceTotal = this.convertStringMoneyToNumber(item.priceTotal);
+					airline.priceTax =
+						typeof this.convertStringMoneyToNumber(item.priceTax) === "number"
+							? this.convertStringMoneyToNumber(item.priceTax)
+							: airline.priceTotal - airline.priceWithoutTax;
+
+					if (typeof airline.priceTotal !== "number") {
+						console.log("Valor total invalido, registro ignorado: ", item.priceTotal);
+						return;
+					}
 
 					airline.createdAt = new Date();
 
