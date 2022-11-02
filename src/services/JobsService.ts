@@ -115,7 +115,11 @@ export class JobService {
 		const moneyWithoutDash = moneyWithoutDot.replace("-", ".");
 		const moneyWithoutSpace = moneyWithoutDash.replace(" ", "");
 
-		return Number(moneyWithoutSpace);
+		if (Boolean(Number(moneyWithoutSpace))) {
+			return Number(moneyWithoutSpace);
+		}
+
+		return 0;
 	}
 
 	async executeCrawler(jobs: Job[]) {
@@ -214,18 +218,15 @@ export class JobService {
 
 					airline.id = uuid();
 
+					console.log(airline);
 					airline.company = item.company;
 					airline.arrivalDate = item.arrivalDate;
 					airline.departureDate = item.departureDate;
-					airline.priceWithoutTax =
-						typeof item.priceWithoutTax === "number" ? this.convertStringMoneyToNumber(item.priceWithoutTax) : 0;
+					airline.priceWithoutTax = this.convertStringMoneyToNumber(item.priceWithoutTax);
 					airline.priceTotal = this.convertStringMoneyToNumber(item.priceTotal);
-					airline.priceTax =
-						typeof this.convertStringMoneyToNumber(item.priceTax) === "number"
-							? this.convertStringMoneyToNumber(item.priceTax)
-							: airline.priceTotal - airline.priceWithoutTax;
+					airline.priceTax = this.convertStringMoneyToNumber(item.priceTax);
 
-					if (typeof airline.priceTotal !== "number") {
+					if (airline.priceTotal === 0) {
 						console.log("Valor total invalido, registro ignorado: ", item.priceTotal);
 						return;
 					}
