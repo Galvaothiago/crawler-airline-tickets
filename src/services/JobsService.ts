@@ -9,6 +9,8 @@ import {CreateAirlineTicketsDto} from "../../src/entities/dto/CreateAirlineTicke
 import {Crawler, InformationFlight} from "./Crawler";
 import {v4 as uuid} from "uuid";
 import {AirlineTicketProps, transformData} from "../utils/transformData";
+import {LogService} from "./logService";
+import {LogTypesEnum} from "./logs-enum";
 
 export class JobService {
 	private jobRepository = AppDataSource.getRepository(Job);
@@ -34,6 +36,7 @@ export class JobService {
 
 			throw new Error("Invalid dates");
 		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, err.message);
 			console.error(err);
 		}
 	}
@@ -55,6 +58,7 @@ export class JobService {
 
 			return jobsCanExecute;
 		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, `Error to filter jobs: ${err.message}`);
 			console.error(err);
 		}
 	}
@@ -63,6 +67,7 @@ export class JobService {
 		try {
 			return await this.jobRepository.find();
 		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, `Error to get all jobs: ${err.message}`);
 			console.error(err);
 		}
 	}
@@ -71,6 +76,7 @@ export class JobService {
 		try {
 			return await this.jobRepository.findOneBy({id});
 		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, `Error to get job by id: ${err.message}`);
 			console.error(err);
 		}
 	}
@@ -79,6 +85,7 @@ export class JobService {
 		try {
 			await this.jobRepository.delete({id});
 		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, `Error to delete job by id: ${err.message}`);
 			console.error(err);
 		}
 	}
@@ -87,6 +94,7 @@ export class JobService {
 		try {
 			await this.jobRepository.update({id}, createJobDto);
 		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, `Error to update job by id: ${err.message}`);
 			console.error(err);
 		}
 	}
@@ -104,6 +112,7 @@ export class JobService {
 				return;
 			}
 		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, `Error to increment times executed: ${err.message}`);
 			console.error(err);
 		}
 	}
@@ -126,6 +135,7 @@ export class JobService {
 		for (let k = 0; k < jobs.length; k++) {
 			let cluster = await this.puppeteer.initPuppeteerCluster();
 
+			const start = new Date();
 			console.log("Job started: ", jobs[k].id);
 
 			const {id, departureDate, arrivalDate, departureAirport, arrivalAirport} = jobs[k];
@@ -205,6 +215,7 @@ export class JobService {
 
 						return result;
 					} catch (err) {
+						LogService.createLog(LogTypesEnum.ERROR, `Error to execute crawler: ${err.message}`);
 						console.log(err);
 					}
 				};
@@ -218,7 +229,6 @@ export class JobService {
 
 					airline.id = uuid();
 
-					console.log(airline);
 					airline.company = item.company;
 					airline.arrivalDate = item.arrivalDate;
 					airline.departureDate = item.departureDate;
@@ -227,8 +237,11 @@ export class JobService {
 					airline.priceTax = this.convertStringMoneyToNumber(item.priceTax);
 
 					if (airline.priceTotal === 0) {
-						console.log("Valor total invalido, registro ignorado: ", item.priceTotal);
-						return;
+						LogService.createLog(
+							LogTypesEnum.ERROR,
+							`Price total is equal zero, item ignored: priceTotal: R$ ${item.priceTotal}`,
+						);
+						continue;
 					}
 
 					airline.createdAt = new Date();
@@ -271,7 +284,14 @@ export class JobService {
 
 					airlineList.push(airline);
 				}
-				await this.airlineService.createAirlineTicket(airlineList);
+
+				if (airlineList.length > 0) {
+					await this.airlineService.createAirlineTicket(airlineList);
+					LogService.createLog(
+						LogTypesEnum.SUCCESS,
+						`Airline tickets created successfully, founded ${airlineList.length} tickets`,
+					);
+				}
 			});
 
 			for (let i = 0; i < alternativesDates.length; i++) {
@@ -292,6 +312,13 @@ export class JobService {
 
 			cluster = null;
 			await this.incrementTimesExecuted(id);
+
+			LogService.createLog(
+				LogTypesEnum.SUCCESS,
+				"Crawler executed successfully, closing browser. Time executed to this job: " +
+					((new Date().getTime() - start.getTime()) / 1000).toFixed(2) +
+					" seconds",
+			);
 			console.timeEnd("Job time");
 		}
 	}

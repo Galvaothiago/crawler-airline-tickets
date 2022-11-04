@@ -1,6 +1,7 @@
 import nodeCron from "node-cron";
 import {JobService} from "./JobsService";
 import {EnumSchedulePattern} from "./enumSchedulePattern";
+import {LogService} from "./logService";
 
 export class Schedule {
 	schedulePattern: string;
@@ -43,6 +44,14 @@ export class Schedule {
 			return;
 		}
 
-		this.setSchedulePattern(EnumSchedulePattern.EVERY_5_MINUTES);
+		this.setSchedulePattern(EnumSchedulePattern.EVERY_1_MINUTES);
+	}
+
+	async scheduleLogs() {
+		const job = nodeCron.schedule(EnumSchedulePattern.EVERY_12_HOURS, async () => {
+			await LogService.saveLogs();
+		});
+
+		return job;
 	}
 }

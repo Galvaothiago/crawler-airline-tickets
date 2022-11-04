@@ -9,4 +9,5 @@ export enum EnumSchedulePattern {
 	EVERY_3_HOURS = "0 */3 * * *",
 	EVERY_4_HOURS = "0 */4 * * *",
 	EVERY_5_HOURS = "0 */5 * * *",
+	EVERY_12_HOURS = "0 */12 * * *",
 }
