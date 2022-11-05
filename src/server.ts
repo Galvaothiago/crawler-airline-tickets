@@ -6,6 +6,7 @@ import {Schedule} from "./services/Schedule";
 
 import RouterJobs from "./controllers/jobController";
 import RouterAirlineTickets from "./controllers/airlineTicketsController";
+import RouterLogs from "./controllers/logController";
 
 const app: Express = express();
 dotenv.config();
@@ -14,8 +15,9 @@ const port = process.env.PORT ?? 3333;
 
 app.use(express.json());
 
-app.use("/job", RouterJobs);
+app.use("/jobs", RouterJobs);
 app.use("/airline-tickets", RouterAirlineTickets);
+app.use("/logs", RouterLogs);
 
 const job = new Schedule();
 const jobSchedule = await job.execute();

@@ -68,7 +68,40 @@ export class LogService {
 		try {
 			const logs = this.logsRepository.create(listLogs);
 			await this.logsRepository.save(logs);
-			console.log("logs saved in database");
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	async getLogsByPage(page: number, limitByPage: number) {
+		limitByPage = limitByPage ?? 80;
+
+		try {
+			const logs = await this.logsRepository.find({
+				skip: page * limitByPage,
+				take: limitByPage,
+			});
+
+			return logs;
+		} catch (err) {
+			console.error(err);
+		}
+	}
+
+	async getAllLogsByType(type: string) {
+		const enumType = type.toLocaleUpperCase() === "SUCCESS" ? LogTypesEnum.SUCCESS : LogTypesEnum.ERROR;
+
+		try {
+			const logs = await this.logsRepository.find({
+				where: {
+					type: enumType,
+				},
+				order: {
+					createdAt: "DESC",
+				},
+				take: 150,
+			});
+			return logs;
 		} catch (err) {
 			console.error(err);
 		}
