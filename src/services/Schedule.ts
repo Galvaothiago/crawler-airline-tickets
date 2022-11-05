@@ -6,10 +6,12 @@ import {LogService} from "./logService";
 export class Schedule {
 	schedulePattern: string;
 	jobService: JobService;
+	logService: LogService;
 
 	constructor() {
 		this.getHoursFromServerAndCompare();
 		this.jobService = new JobService();
+		this.logService = new LogService();
 	}
 
 	async execute() {
@@ -44,12 +46,12 @@ export class Schedule {
 			return;
 		}
 
-		this.setSchedulePattern(EnumSchedulePattern.EVERY_1_MINUTES);
+		this.setSchedulePattern(EnumSchedulePattern.EVERY_HOUR);
 	}
 
 	async scheduleLogs() {
 		const job = nodeCron.schedule(EnumSchedulePattern.EVERY_12_HOURS, async () => {
-			await LogService.saveLogs();
+			await this.logService.saveLogs();
 		});
 
 		return job;

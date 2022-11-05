@@ -3,9 +3,10 @@ import AppDataSource from "../../src/database";
 import {LogDto} from "../../src/entities/dto/logDto";
 import {Log} from "../../src/entities/logs";
 import {LogTypesEnum} from "./logs-enum";
+import readLine from "readline";
 
 export class LogService {
-	static logsRepository = AppDataSource.getRepository(Log);
+	private logsRepository = AppDataSource.getRepository(Log);
 	constructor() {}
 
 	static async createLog(type: LogTypesEnum, message: string) {
@@ -17,13 +18,13 @@ export class LogService {
 		fs.appendFileSync(path, log);
 	}
 
-	static async saveLogs() {
+	async saveLogs() {
 		const path = process.env.LOGS_PATH;
 		const listLogs: LogDto[] = [];
 
 		const fileStream = fs.createReadStream(path);
 
-		const rl = require("readline").createInterface({
+		const rl = readLine.createInterface({
 			input: fileStream,
 			crlfDelay: Infinity,
 		});
@@ -44,7 +45,7 @@ export class LogService {
 		listLogs.length = 0;
 	}
 
-	static async deleteLogsAfterInsert() {
+	async deleteLogsAfterInsert() {
 		const path = process.env.LOGS_PATH;
 
 		try {
@@ -54,7 +55,7 @@ export class LogService {
 		}
 	}
 
-	static convertLineLogToObject(line: string) {
+	private convertLineLogToObject(line: string) {
 		const [type, message, createdAt] = line.split(";");
 		return {
 			type,
@@ -63,10 +64,11 @@ export class LogService {
 		};
 	}
 
-	static async insertLogsInDatabase(listLogs: LogDto[]) {
+	async insertLogsInDatabase(listLogs: LogDto[]) {
 		try {
 			const logs = this.logsRepository.create(listLogs);
 			await this.logsRepository.save(logs);
+			console.log("logs saved in database");
 		} catch (err) {
 			console.error(err);
 		}
