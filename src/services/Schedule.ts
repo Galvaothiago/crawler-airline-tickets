@@ -51,11 +51,11 @@ export class Schedule {
 		const morningHour = 6;
 
 		if (currentHour >= midnightHour && currentHour <= morningHour) {
-			this.setSchedulePattern(EnumSchedulePattern.EVERY_30_MINUTES);
+			this.setSchedulePattern(EnumSchedulePattern.EVERY_15_MINUTES);
 			return;
 		}
 
-		this.setSchedulePattern(EnumSchedulePattern.EVERY_HOUR);
+		this.setSchedulePattern(EnumSchedulePattern.EVERY_30_MINUTES);
 	}
 
 	async scheduleLogs() {
