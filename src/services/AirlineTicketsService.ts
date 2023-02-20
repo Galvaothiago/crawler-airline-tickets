@@ -66,7 +66,7 @@ export class AirlineTicketsService {
 				order: {
 					priceTotal: "ASC",
 				},
-				take: 30
+				take: 6,
 			});
 
 			return airlineTickets;

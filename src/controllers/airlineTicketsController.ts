@@ -28,7 +28,7 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 
 	if (hours === "full") {
 		paramsDate = {
-			initial: `${date} 00:00:00`,
+			initial: `${date} 00:00:01`,
 			final: `${date} 23:59:59`,
 		};
 	} else {
