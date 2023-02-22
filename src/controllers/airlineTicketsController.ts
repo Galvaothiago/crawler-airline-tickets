@@ -15,7 +15,7 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get("/:date/:hours", async (req: Request, res: Response, next: NextFunction) => {
-	const date = req.params.date;
+	let date = req.params.date;
 	const hours = req.params.hours;
 	let paramsDate = {
 		initial: "",
@@ -26,9 +26,12 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 		res.status(400).json({message: "Invalid parameters"});
 	}
 
+	const arrDates = date.split("-");
+	date = `${arrDates[2]}-${arrDates[0].padStart(2, "0")}-${arrDates[1].padStart(2, "0")}`;
+
 	if (hours === "full") {
 		paramsDate = {
-			initial: `${date} 00:00:01`,
+			initial: `${date} 00:00:00`,
 			final: `${date} 23:59:59`,
 		};
 	} else {
