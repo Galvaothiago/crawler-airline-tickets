@@ -17,6 +17,10 @@ router.get("/", async (req: Request, res: Response, next: NextFunction) => {
 router.get("/:date/:hours", async (req: Request, res: Response, next: NextFunction) => {
 	let date = req.params.date;
 	const hours = req.params.hours;
+	const jobId = req.query?.jobId as string;
+
+	console.log({date, hours, jobId});
+
 	let paramsDate = {
 		initial: "",
 		final: "",
@@ -43,7 +47,7 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 		};
 	}
 
-	const airlines = await airlineService.findBetweenDate(paramsDate.initial, paramsDate.final);
+	const airlines = await airlineService.findBetweenDate(paramsDate.initial, paramsDate.final, jobId);
 	res.json(airlines);
 });
 

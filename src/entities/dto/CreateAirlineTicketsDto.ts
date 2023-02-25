@@ -4,6 +4,7 @@ import {DepartureFlight} from "../DepartureFlight";
 
 export class CreateAirlineTicketsDto {
 	id: string;
+	jobId: string;
 	departureDate: string;
 	arrivalDate: string;
 	company: string;

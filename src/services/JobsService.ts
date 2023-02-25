@@ -228,6 +228,7 @@ export class JobService {
 					const airline: CreateAirlineTicketsDto = new CreateAirlineTicketsDto();
 
 					airline.id = uuid();
+					airline.jobId = id;
 
 					airline.company = item.company;
 					airline.arrivalDate = item.arrivalDate;

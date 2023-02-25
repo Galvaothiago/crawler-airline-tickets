@@ -7,6 +7,9 @@ export class AirlineTicket {
 	@PrimaryGeneratedColumn("uuid")
 	id: string;
 
+	@Column({name: "job_id"})
+	jobId: string;
+
 	@Column({name: "departure_date"})
 	departureDate: string;
 

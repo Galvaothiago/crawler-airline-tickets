@@ -57,16 +57,17 @@ export class AirlineTicketsService {
 		}
 	}
 
-	async findBetweenDate(initialDate: string, finalDate: string) {
+	async findBetweenDate(initialDate: string, finalDate: string, jobId: string) {
 		try {
 			const airlineTickets = await this.airlineRepository.find({
 				where: {
+					jobId: jobId,
 					createdAt: Between(new Date(initialDate), new Date(finalDate)),
 				},
 				order: {
 					priceTotal: "ASC",
 				},
-				take: 12,
+				take: 20,
 			});
 
 			return airlineTickets;

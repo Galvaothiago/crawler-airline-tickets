@@ -45,6 +45,7 @@ export enum IATACodeAirport {
 	FERNANDO_DE_NORONHA = "FEN",
 	BAURU = "JTC",
 	MONTE_CLAROS = "MOC",
+	FORT_LAUDERDALE = "FLL",
 }
 
 export const getIATACodeAirport = (airport: string): IATACodeAirport => {
@@ -143,6 +144,8 @@ export const getIATACodeAirport = (airport: string): IATACodeAirport => {
 			return IATACodeAirport.BAURU;
 		case "monte claros" || "moc":
 			return IATACodeAirport.MONTE_CLAROS;
+		case "fort lauderdale" || "fll":
+			return IATACodeAirport.FORT_LAUDERDALE;
 		default:
 			return IATACodeAirport.GUARULHOS;
 	}

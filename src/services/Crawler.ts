@@ -26,6 +26,7 @@ export class Crawler {
 	async init() {
 		this.browser = await puppeteer.launch({
 			headless: true,
+			args: ["--disable-dev-shm-usage"],
 		});
 		this.page = await this.browser.newPage();
 
