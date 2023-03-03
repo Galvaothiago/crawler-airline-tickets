@@ -19,8 +19,6 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 	const hours = req.params.hours;
 	const jobId = req.query?.jobId as string;
 
-	console.log({date, hours, jobId});
-
 	let paramsDate = {
 		initial: "",
 		final: "",
@@ -31,7 +29,7 @@ router.get("/:date/:hours", async (req: Request, res: Response, next: NextFuncti
 	}
 
 	const arrDates = date.split("-");
-	date = `${arrDates[2]}-${arrDates[0].padStart(2, "0")}-${arrDates[1].padStart(2, "0")}`;
+	date = `${arrDates[2]}-${arrDates[0].padStart(2, "0")}-${arrDates[1]?.padStart(2, "0")}`;
 
 	if (hours === "full") {
 		paramsDate = {
