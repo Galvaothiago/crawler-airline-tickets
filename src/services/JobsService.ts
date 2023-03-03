@@ -155,8 +155,8 @@ export class JobService {
 							let result = [];
 							let scrollValue = 0;
 
-							const elementQuantiAirTickets: HTMLElement | null = document.querySelector(".css-7zc1qr");
-							const airlineTicketsFound = Number(elementQuantiAirTickets?.innerText.split(" ")[0]);
+							const elementQuantityAirTickets: HTMLElement | null = document.querySelector(".css-7zc1qr");
+							const airlineTicketsFound = Number(elementQuantityAirTickets?.innerText.split(" ")[0]);
 
 							function scrollPage(value: number) {
 								window.scrollTo(0, value);
