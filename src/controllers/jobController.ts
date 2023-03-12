@@ -24,6 +24,23 @@ router.post("/", async (req: Request, res: Response, next: NextFunction) => {
 	res.json(job);
 });
 
+router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
+	const job: CreateJobDto = req.body;
+
+	job.departureAirport = getIATACodeAirport(job.departureAirport);
+	job.arrivalAirport = getIATACodeAirport(job.arrivalAirport);
+
+	await jobService.updateJobById(req.params.id, job);
+
+	res.json(job);
+});
+
+router.patch("/:id", async (req: Request, res: Response, next: NextFunction) => {
+	await jobService.resetExecuteJob(req.params.id);
+
+	res.json({});
+});
+
 router.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
 	await jobService.deleteJobById(req.params.id);
 

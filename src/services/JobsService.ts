@@ -99,6 +99,17 @@ export class JobService {
 		}
 	}
 
+	async resetExecuteJob(id: string) {
+		try {
+			const job = await this.jobRepository.findOneBy({id});
+			job.timesExecuted = 0;
+			await this.jobRepository.save(job);
+		} catch (err) {
+			LogService.createLog(LogTypesEnum.ERROR, `Error to reset job by id: ${err.message}`);
+			console.error(err);
+		}
+	}
+
 	async incrementTimesExecuted(id: string) {
 		try {
 			const job = await this.jobRepository.findOneBy({id});
