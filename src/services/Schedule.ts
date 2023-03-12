@@ -29,6 +29,7 @@ export class Schedule {
 			}
 
 			await this.jobService.executeCrawler(jobs);
+			await this.logService.saveLogs();
 			this.alreadyRunning = false;
 		});
 
@@ -56,21 +57,5 @@ export class Schedule {
 		}
 
 		this.setSchedulePattern(EnumSchedulePattern.EVERY_15_MINUTES);
-	}
-
-	async scheduleLogs() {
-		const job = nodeCron.schedule(this.schedulePatternToDelete, async () => {
-			const canBeExecuted = this.alreadyRunning;
-
-			if (canBeExecuted) {
-				this.setSchedulePatternDelete(EnumSchedulePattern.EVERY_12_HOURS);
-
-				await this.logService.saveLogs();
-			} else {
-				this.setSchedulePatternDelete(EnumSchedulePattern.EVERY_5_MINUTES);
-			}
-		});
-
-		return job;
 	}
 }
