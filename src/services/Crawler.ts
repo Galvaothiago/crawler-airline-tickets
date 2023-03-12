@@ -42,6 +42,7 @@ export class Crawler {
 			maxConcurrency: Number(process.env.PUPPETEER_CLUSTER_MAX_CONCURRENCY),
 			puppeteerOptions: {
 				headless: true,
+				args: ["--disable-dev-shm-usage"],
 			},
 		});
 
