@@ -49,7 +49,7 @@ export enum IATACodeAirport {
 }
 
 export const getIATACodeAirport = (airport: string): IATACodeAirport => {
-	airport = airport.toLowerCase();
+	airport = airport?.toLowerCase();
 
 	switch (airport) {
 		case "campinas" || "vcp":
