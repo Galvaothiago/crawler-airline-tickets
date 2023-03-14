@@ -1,3 +1,5 @@
+import {EnumJobAlternativesDate} from "src/services/enumJobAlternativesDate";
+
 export class CreateJobDto {
 	createdAt: Date;
 
@@ -8,6 +10,8 @@ export class CreateJobDto {
 	departureDate: string;
 
 	arrivalDate: string;
+
+	alternativeDateType: EnumJobAlternativesDate;
 
 	timesToRun: number;
 

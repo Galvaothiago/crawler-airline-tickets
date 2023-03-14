@@ -11,13 +11,17 @@ import {v4 as uuid} from "uuid";
 import {AirlineTicketProps, transformData} from "../utils/transformData";
 import {LogService} from "./logService";
 import {LogTypesEnum} from "./logs-enum";
+import {convertStringToEnumAlternativeDate} from "../../src/utils/verifyStringToEnum";
+import {Repository} from "typeorm";
 
 export class JobService {
-	private jobRepository = AppDataSource.getRepository(Job);
-	private airlineService = new AirlineTicketsService();
+	private jobRepository: Repository<Job>;
+	private airlineService: AirlineTicketsService;
 	puppeteer: Crawler;
 
 	constructor() {
+		this.jobRepository = AppDataSource.getRepository(Job);
+		this.airlineService = new AirlineTicketsService();
 		this.puppeteer = new Crawler();
 	}
 
@@ -28,6 +32,7 @@ export class JobService {
 			if (validationDate) {
 				createJobDto.timesExecuted = 0;
 				createJobDto.createdAt = new Date();
+				createJobDto.alternativeDateType = convertStringToEnumAlternativeDate(createJobDto.alternativeDateType);
 
 				const job = this.jobRepository.create(createJobDto);
 				await this.jobRepository.save(job);
@@ -149,9 +154,13 @@ export class JobService {
 			const start = new Date();
 			console.log("Job started: ", jobs[k].id);
 
-			const {id, departureDate, arrivalDate, departureAirport, arrivalAirport} = jobs[k];
+			const {id, departureDate, arrivalDate, departureAirport, arrivalAirport, alternativeDateType} = jobs[k];
 
-			const alternativesDates: string[][] = getAlternativesDate(String(departureDate), String(arrivalDate));
+			const alternativesDates: string[][] = getAlternativesDate(
+				String(departureDate),
+				String(arrivalDate),
+				alternativeDateType,
+			);
 
 			console.time("Job time");
 
