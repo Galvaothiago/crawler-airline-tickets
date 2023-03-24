@@ -1,4 +1,4 @@
-import {checkValidDates, generateAlternateDates, getAlternativesDate, numberToSubstractByEnum} from "../utils/dates-utils";
+import {checkValidDates, generateAlternateDates, numberToSubstractByEnum} from "../utils/dates-utils";
 import AppDataSource from "../../src/database";
 import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {Job} from "../../src/entities/Jobs";
