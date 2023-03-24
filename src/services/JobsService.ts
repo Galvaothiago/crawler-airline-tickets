@@ -1,4 +1,4 @@
-import {checkValidDates, getAlternativesDate} from "../utils/dates-utils";
+import {checkValidDates, generateAlternateDates, getAlternativesDate, numberToSubstractByEnum} from "../utils/dates-utils";
 import AppDataSource from "../../src/database";
 import {CreateJobDto} from "../../src/entities/dto/CreateJobDto";
 import {Job} from "../../src/entities/Jobs";
@@ -156,11 +156,10 @@ export class JobService {
 
 			const {id, departureDate, arrivalDate, departureAirport, arrivalAirport, alternativeDateType} = jobs[k];
 
-			const alternativesDates: string[][] = getAlternativesDate(
-				String(departureDate),
-				String(arrivalDate),
-				alternativeDateType,
-			);
+			const dateType = numberToSubstractByEnum(alternativeDateType);
+			const auxSet: Set<string[]> = new Set();
+
+			const alternativesDates = generateAlternateDates(new Date(departureDate), new Date(arrivalDate), dateType, auxSet);
 
 			console.time("Job time");
 
