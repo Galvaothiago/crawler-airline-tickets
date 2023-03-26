@@ -1,6 +1,6 @@
 export const generateAlternateDates = (startDate: Date, endDate: Date, daysToAdd: number, datePairs: Set<string[]>) => {
 	if (datePairs.size >= 12) {
-		return datePairs;
+		return Array.from(datePairs);
 	}
 
 	datePairs.add([transformDate(startDate), transformDate(endDate)]);
