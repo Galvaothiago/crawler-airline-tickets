@@ -47,7 +47,6 @@ export class AirlineTicketsService {
 			});
 
 			if (!id) {
-				// 	TODO logar error em algum lugar
 				throw new Error("Airline Ticket not found");
 			}
 
