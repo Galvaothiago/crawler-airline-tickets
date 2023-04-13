@@ -5,23 +5,19 @@ import {LogService} from "./logService";
 
 export class Schedule {
 	private schedulePattern: EnumSchedulePattern;
-	private schedulePatternToDelete: EnumSchedulePattern;
 	jobService: JobService;
 	logService: LogService;
-	private alreadyRunning: boolean = false;
 
 	constructor() {
 		this.getHoursFromServerAndCompare();
 		this.jobService = new JobService();
 		this.logService = new LogService();
-		this.schedulePatternToDelete = EnumSchedulePattern.EVERY_12_HOURS;
 	}
 
 	async execute() {
 		const job = nodeCron.schedule(this.schedulePattern, async () => {
 			const jobs = await this.jobService.getAllJobsCanExecute();
 
-			this.alreadyRunning = true;
 			this.getHoursFromServerAndCompare();
 
 			if (jobs.length === 0) {
@@ -30,7 +26,6 @@ export class Schedule {
 
 			await this.jobService.executeCrawler(jobs);
 			await this.logService.saveLogs();
-			this.alreadyRunning = false;
 		});
 
 		return job;
@@ -38,10 +33,6 @@ export class Schedule {
 
 	setSchedulePattern(schedulePattern: EnumSchedulePattern) {
 		this.schedulePattern = schedulePattern;
-	}
-
-	setSchedulePatternDelete(schedulePattern: EnumSchedulePattern) {
-		this.schedulePatternToDelete = schedulePattern;
 	}
 
 	getHoursFromServerAndCompare() {
@@ -56,6 +47,6 @@ export class Schedule {
 			return;
 		}
 
-		this.setSchedulePattern(EnumSchedulePattern.EVERY_30_MINUTES);
+		this.setSchedulePattern(EnumSchedulePattern.EVERY_15_MINUTES);
 	}
 }
