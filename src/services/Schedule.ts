@@ -47,6 +47,6 @@ export class Schedule {
 			return;
 		}
 
-		this.setSchedulePattern(EnumSchedulePattern.EVERY_15_MINUTES);
+		this.setSchedulePattern(EnumSchedulePattern.EVERY_5_MINUTES);
 	}
 }
